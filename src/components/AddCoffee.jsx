@@ -1,50 +1,161 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import Swal from 'sweetalert2';
 
 const AddCoffee = () => {
+    const containerRef = useRef(null);
+    const inputsRef = useRef([]);
+    const formRef = useRef(null);
+
+    useEffect(() => {
+        gsap.fromTo(
+            containerRef.current,
+            { opacity: 0, y: 50 },
+            { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }
+        );
+
+        gsap.fromTo(
+            inputsRef.current,
+            { opacity: 0, y: 20 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: 'power2.out',
+                delay: 0.3,
+            }
+        );
+    }, []);
+    const handleAddCoffee = e => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        const newCoffee = Object.fromEntries(formData)
+        console.log(newCoffee);
+
+        // send cofee data to DB
+        fetch('http://localhost:5000/coffees', {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(newCoffee)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.insertedId) {
+                    console.log("User added successfully");
+                    Swal.fire({
+                        title: "Coffee added successfully!",
+                        icon: "success",
+                        draggable: true
+                    });
+                }
+
+            })
+
+    }
+
     return (
-        <div className='add-coffee-bg min-h-screen'>
-            <div className='card-bg py-10 lg:py-14'>
-                <div className='text-center md:w-7/12 w-full mx-auto space-y-5'>
-                    <h1 className='text-3xl lg:text-6xl rancho'>Add Coffee</h1>
-                    <p className='raleway'>It is a long established fact that a reader will be distraceted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here.</p>
+        <div className="min-h-screen add-coffee-bg py-12 px-4">
+            <div
+                ref={containerRef}
+                className="max-w-4xl mx-auto bg-[#f4f1ed] shadow-md rounded-xl p-8"
+            >
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-extrabold text-gray-800 rancho mb-3">
+                        Add New Coffee
+                    </h1>
+                    <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
+                        It is a long established fact that a reader will be distracted by the readable
+                        content of a page when looking at its layout. The point of using Lorem Ipsum is
+                        that it has a more-or-less normal distribution of letters, as opposed to using
+                        Content here.
+                    </p>
                 </div>
 
-                <form className='w-full md:w-10/12
-                 mx-auto'>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                        <fieldset className="fieldset ">
-                            <label className='text-sm md:text-lg font-bold'>Page title</label>
-                            <input type="text" className="input w-full focus:outline-none focus:border-none focus:shadow-2xs" placeholder="My awesome page" />
+                <form onSubmit={handleAddCoffee} ref={formRef} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div ref={(el) => (inputsRef.current[0] = el)}>
+                            <label className="block text-gray-700 mb-1">Name</label>
+                            <input
+                                name="name"
+                                type="text"
+                                placeholder="Enter coffee name"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d2b48c]"
+                            />
+                        </div>
 
-                            <label className='text-sm md:text-lg font-bold'>Page title</label>
-                            <input type="text" className="input w-full focus:outline-none focus:border-none focus:shadow-2xs" placeholder="My awesome page" />
+                        <div ref={(el) => (inputsRef.current[1] = el)}>
+                            <label className="block text-gray-700 mb-1">Quantity</label>
+                            <input
+                                name="quantity"
+                                type="number"
+                                placeholder="Enter coffee Quantity"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d2b48c] appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            />
+                        </div>
 
-                            <label className='text-sm md:text-lg font-bold'>Page title</label>
-                            <input type="text" className="input w-full focus:outline-none focus:border-none focus:shadow-2xs" placeholder="My awesome page" />
+                        <div ref={(el) => (inputsRef.current[2] = el)}>
+                            <label className="block text-gray-700 mb-1">Supplier</label>
+                            <input
+                                name="supplier"
+                                type="text"
+                                placeholder="Enter coffee supplier"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d2b48c]"
+                            />
+                        </div>
 
-                        </fieldset>
+                        <div ref={(el) => (inputsRef.current[3] = el)}>
+                            <label className="block text-gray-700 mb-1">Taste</label>
+                            <input
+                                name="taste"
+                                type="text"
+                                placeholder="Enter coffee taste"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d2b48c]"
+                            />
+                        </div>
 
-                        <fieldset className="fieldset ">
-                            <label className='text-sm md:text-lg font-bold'>Page title</label>
-                            <input type="text" className="input w-full focus:outline-none focus:border-none focus:shadow-2xs" placeholder="My awesome page" />
+                        <div ref={(el) => (inputsRef.current[4] = el)}>
+                            <label className="block text-gray-700 mb-1">Price</label>
+                            <input
+                                name="price"
+                                type="number"
+                                placeholder="Enter coffee Price"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d2b48c] appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            />
+                        </div>
 
-                            <label className='text-sm md:text-lg font-bold'>Page title</label>
-                            <input type="text" className="input w-full focus:outline-none focus:border-none focus:shadow-2xs" placeholder="My awesome page" />
-
-                            <label className='text-sm md:text-lg font-bold'>Page title</label>
-                            <input type="text" className="input w-full focus:outline-none focus:border-none focus:shadow-2xs" placeholder="My awesome page" />
-
-                        </fieldset>
+                        <div ref={(el) => (inputsRef.current[5] = el)}>
+                            <label className="block text-gray-700 mb-1">Details</label>
+                            <input
+                                name="details"
+                                type="text"
+                                placeholder="Enter coffee details"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d2b48c]"
+                            />
+                        </div>
                     </div>
-                    <div className='space-y-5'>
-                        <label className='text-sm md:text-lg font-bold'>Page title</label>
-                        <input type="text" className="input w-full focus:outline-none focus:border-none focus:shadow-2xs" placeholder="My awesome page" />
 
-                        <input type="submit" value="Add Coffee" className="w-full focus:outline-none focus:border-none bg-[#D2B48C] py-2 font-bold rancho cursor-pointer hover:bg-[rgba(158,103,32,0.72)] transition-all text-lg" />
+                    <div ref={(el) => (inputsRef.current[6] = el)}>
+                        <label className="block text-gray-700 mb-1">Photo</label>
+                        <input
+                            name="photo"
+                            type="text"
+                            placeholder="Enter photo URL"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d2b48c]"
+                        />
                     </div>
 
+                    <div ref={(el) => (inputsRef.current[7] = el)}>
+                        <input
+                            type="submit"
+                            value="Add Coffee"
+                            className="w-full bg-[#d2b48c] text-white font-bold py-2 px-4 rounded-md border border-gray-600 hover:bg-[rgba(158,103,32,0.72)] transition-all duration-300 rancho text-lg cursor-pointer"
+                        />
+                    </div>
                 </form>
-
             </div>
         </div>
     );
