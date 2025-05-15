@@ -1,6 +1,7 @@
 import React from "react";
 import { Eye, Edit2, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 const CoffeeCard = ({ coffee }) => {
     const { _id, photo, name, supplier, price } = coffee;
@@ -66,7 +67,8 @@ const CoffeeCard = ({ coffee }) => {
             {/* Action Buttons */}
             <div className="flex flex-col gap-2">
                 <button className="bg-[#D2B48C] hover:bg-[#c9a36e] p-2 rounded">
-                    <Eye className="w-4 h-4 text-white" />
+                    <Link to={`/coffeeDetail/${_id}`}><Eye className="w-4 h-4 text-white" /></Link>
+                    
                 </button>
                 <button className="bg-black hover:bg-gray-800 p-2 rounded">
                     <Edit2 className="w-4 h-4 text-white" />
