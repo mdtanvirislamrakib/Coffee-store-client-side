@@ -1,2 +1,24 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Rancho&display=swap');
+
+.rancho {
+    font-family: "Rancho", cursive;
+}
+
+.raleway {
+    font-family: "Raleway", sans-serif;
+}
+
+.add-coffee-bg {
+    background: url("./assets/more/11.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.card-bg {
+    border-radius: 5px;
+    background: rgb(244, 243, 240);
+}
