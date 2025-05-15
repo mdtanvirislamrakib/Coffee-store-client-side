@@ -22,3 +22,10 @@
     border-radius: 5px;
     background: rgb(244, 243, 240);
 }
+
+.addCoffee-bg {
+    background: url("./assets/more/1.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
