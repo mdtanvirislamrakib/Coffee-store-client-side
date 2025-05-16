@@ -13,15 +13,24 @@ const SignUp = () => {
         const form = e.target;
         const formData = new FormData(form)
 
-        const { email, password, ...userProfile } = Object.fromEntries(formData.entries())
+        const { email, password, ...rest } = Object.fromEntries(formData.entries())
 
 
-        console.log(email, password, userProfile);
+
+
 
         // create user in firebase
         createUser(email, password)
             .then(result => {
                 console.log(result.user);
+                const userProfile = {
+                    email,
+                    ...rest,
+                    creationTime: result.user?.metadata?.creationTime,
+                    lastSignInTime: result.user?.metadata?.lastSignInTime
+
+                }
+
 
                 // save profile info in db
                 fetch('http://localhost:5000/users', {
@@ -66,6 +75,7 @@ const SignUp = () => {
                         <input
                             type="text"
                             id="name"
+                            name='name'
                             required
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="John Doe"
