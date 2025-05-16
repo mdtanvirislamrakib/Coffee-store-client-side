@@ -16,6 +16,10 @@ const SignIn = () => {
             }
         );
     }, []);
+
+    const handleSignIn = e => {
+        e.preventDefault();
+    }
     return (
         <div className="min-h-screen flex items-center justify-center px-4">
             <div
@@ -23,7 +27,7 @@ const SignIn = () => {
                 className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 sm:p-10 space-y-6"
             >
                 <h2 className="text-3xl font-bold text-gray-800 text-center">Login</h2>
-                <form className="space-y-5">
+                <form onSubmit={handleSignIn} className="space-y-5">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                             Email Address
