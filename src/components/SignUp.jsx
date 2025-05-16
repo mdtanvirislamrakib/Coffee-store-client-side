@@ -1,5 +1,6 @@
 import React, { use } from 'react';
 import { AuthContext } from '../Context/AuthContext';
+import Swal from 'sweetalert2';
 
 const SignUp = () => {
 
@@ -8,18 +9,46 @@ const SignUp = () => {
 
     const handleSignup = e => {
         e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        console.log(email, password);
+
+        const form = e.target;
+        const formData = new FormData(form)
+
+        const { email, password, ...userProfile } = Object.fromEntries(formData.entries())
+
+
+        console.log(email, password, userProfile);
 
         // create user in firebase
         createUser(email, password)
-        .then(result => {
-            console.log(result.user);
-        })
-        .catch(error => {
-            console.log(error.message);
-        })
+            .then(result => {
+                console.log(result.user);
+
+                // save profile info in db
+                fetch('http://localhost:5000/users', {
+                    method: "POST",
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify(userProfile)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.insertedId) {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Your is created!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    })
+
+
+            })
+            .catch(error => {
+                console.log(error.message);
+            })
 
 
     }
@@ -40,6 +69,34 @@ const SignUp = () => {
                             required
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="John Doe"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                            Address
+                        </label>
+                        <input
+                            type="text"
+                            id="address"
+                            name='address'
+                            required
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="New York, America"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                            Phone Number
+                        </label>
+                        <input
+                            type="number"
+                            id="phone"
+                            name='phone'
+                            required
+                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            placeholder="Enter Phone Number"
                         />
                     </div>
 
@@ -73,14 +130,15 @@ const SignUp = () => {
 
                     <div>
                         <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
-                            Confirm Password
+                            Photo URL
                         </label>
                         <input
-                            type="password"
-                            id="confirm-password"
+                            type="text"
+                            id="photo"
+                            name='photo'
                             required
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="••••••••"
+                            placeholder="Photo URL"
                         />
                     </div>
 
