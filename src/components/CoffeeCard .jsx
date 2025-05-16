@@ -3,7 +3,7 @@ import { Eye, Edit2, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
 import { Link } from "react-router";
 
-const CoffeeCard = ({ coffee }) => {
+const CoffeeCard = ({ coffee, coffees, setCoffees }) => {
     const { _id, photo, name, supplier, price } = coffee;
 
     // added delete coffee item
@@ -32,6 +32,15 @@ const CoffeeCard = ({ coffee }) => {
                                 text: "Your file has been deleted.",
                                 icon: "success"
                             });
+
+                            // remove the coffees data
+
+                            const remainingCoffees = coffees.filter(kofi => kofi._id !== _id)
+
+                            setCoffees(remainingCoffees)
+
+
+
                         }
                     })
 
@@ -71,7 +80,8 @@ const CoffeeCard = ({ coffee }) => {
                     
                 </button>
                 <button className="bg-black hover:bg-gray-800 p-2 rounded">
-                    <Edit2 className="w-4 h-4 text-white" />
+                    <Link to={`/updateCoffee/${_id}`}><Edit2 className="w-4 h-4 text-white" /></Link>
+                    
                 </button>
                 <button onClick={() => handleDelete(_id)} className="bg-red-500 hover:bg-red-600 p-2 rounded">
                     <Trash2 className="w-4 h-4 text-white" />
