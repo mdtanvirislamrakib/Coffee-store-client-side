@@ -1,7 +1,12 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, use } from "react";
 import { gsap } from "gsap";
+import { AuthContext } from "../Context/AuthContext";
 
 const SignIn = () => {
+
+    const { signInUser } = use(AuthContext);
+
+
     const formRef = useRef(null);
 
     useEffect(() => {
@@ -19,6 +24,39 @@ const SignIn = () => {
 
     const handleSignIn = e => {
         e.preventDefault();
+
+        const form = e.target;
+        const email = form.email.value;
+        const password = form.password.value;
+
+
+        signInUser(email, password)
+        .then(result => {
+            console.log(result);
+
+            const signinInfo = {
+                email,
+                lastSignInTime: result.user?.metadata?.lastSignInTime
+            }
+
+            fetch('http://localhost:5000/users', {
+                method: 'PATCH',
+                headers: {
+                    'content-type':'application/json'
+                },
+                body: JSON.stringify(signinInfo)
+
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('After Update Patch', data);
+            })
+
+
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
     }
     return (
         <div className="min-h-screen flex items-center justify-center px-4">
@@ -35,6 +73,7 @@ const SignIn = () => {
                         <input
                             type="email"
                             id="email"
+                            name="email"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="you@example.com"
                         />
@@ -46,6 +85,7 @@ const SignIn = () => {
                         <input
                             type="password"
                             id="password"
+                            name="password"
                             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="••••••••"
                         />
